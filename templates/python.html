@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Python — TechEnglish</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+<body>
+
+    <main class="lesson-page">
+        <a href="/" class="back-link">← На главную</a>
+
+        <p class="hero-label">PYTHON · LESSON 1</p>
+
+        <h1>Understanding Functions</h1>
+
+        <p class="lesson-intro">
+            Learn the meaning of functions in Python documentation.
+        </p>
+
+        <article class="lesson-card">
+            <h2>What is a function?</h2>
+
+            <p class="english-text" id="lesson-text">
+                A function is a reusable block of code that performs
+                a specific task. Functions help organize programs
+                and avoid repeating the same code.
+            </p>
+
+            <div id="word-translation" class="word-translation">
+                Нажми на любое слово в тексте, чтобы увидеть перевод.
+            </div>
+
+            <button
+                type="button"
+                id="toggle-translation"
+                class="translation-button"
+            >
+                Показать перевод всего текста
+            </button>
+
+            <div id="full-translation" class="full-translation" hidden>
+                Функция — это повторно используемый блок кода,
+                который выполняет определённую задачу.
+                Функции помогают организовывать программы
+                и избегать повторения одного и того же кода.
+            </div>
+
+            <div class="translation">
+                <h3>Example</h3>
+
+                <pre><code>def greet():
+    print("Hello!")
+
+greet()</code></pre>
+
+                <h3>Explanation</h3>
+
+                <p>
+                    The function <code>greet()</code> prints
+                    the message "Hello!" on the screen.
+                </p>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        const lessonText = document.querySelector("#lesson-text");
+        const translationBox = document.querySelector("#word-translation");
+
+        const toggleButton = document.querySelector("#toggle-translation");
+        const fullTranslation = document.querySelector("#full-translation");
+
+        const dictionary = {
+            "a": "неопределённый артикль",
+            "function": "функция",
+            "is": "является",
+            "reusable": "повторно используемый",
+            "block": "блок",
+            "of": "чего-либо; из",
+            "code": "код",
+            "that": "который",
+            "performs": "выполняет",
+            "specific": "определённый",
+            "task": "задача",
+            "functions": "функции",
+            "help": "помогают",
+            "organize": "организовывать",
+            "programs": "программы",
+            "and": "и",
+            "avoid": "избегать",
+            "repeating": "повторять",
+            "the": "определённый артикль",
+            "same": "тот же самый"
+        };
+
+        lessonText.addEventListener("click", function(event) {
+            const selection = window.getSelection();
+            const selectedWord = selection.toString().trim();
+
+            if (selectedWord) {
+                showTranslation(selectedWord);
+                return;
+            }
+
+            let range;
+
+            if (document.caretRangeFromPoint) {
+                range = document.caretRangeFromPoint(
+                    event.clientX,
+                    event.clientY
+                );
+            } else if (document.caretPositionFromPoint) {
+                const position = document.caretPositionFromPoint(
+                    event.clientX,
+                    event.clientY
+                );
+
+                if (position) {
+                    range = document.createRange();
+                    range.setStart(
+                        position.offsetNode,
+                        position.offset
+                    );
+                }
+            }
+
+            if (!range || !lessonText.contains(range.startContainer)) {
+                return;
+            }
+
+            const node = range.startContainer;
+
+            if (node.nodeType !== Node.TEXT_NODE) {
+                return;
+            }
+
+            const text = node.textContent;
+            const position = range.startOffset;
+
+            let start = position;
+            let end = position;
+
+            while (
+                start > 0 &&
+                /[a-zA-Z'-]/.test(text[start - 1])
+            ) {
+                start--;
+            }
+
+            while (
+                end < text.length &&
+                /[a-zA-Z'-]/.test(text[end])
+            ) {
+                end++;
+            }
+
+            const word = text.slice(start, end);
+
+            if (word) {
+                showTranslation(word);
+            }
+        });
+
+        function showTranslation(word) {
+            const normalizedWord = word.toLowerCase();
+            const translation = dictionary[normalizedWord];
+
+            if (translation) {
+                translationBox.textContent =
+                    word + " — " + translation;
+            } else {
+                translationBox.textContent =
+                    "Перевод для слова «" + word +
+                    "» пока не добавлен в словарь.";
+            }
+        }
+
+        toggleButton.addEventListener("click", function() {
+            fullTranslation.hidden = !fullTranslation.hidden;
+
+            if (fullTranslation.hidden) {
+                toggleButton.textContent =
+                    "Показать перевод всего текста";
+            } else {
+                toggleButton.textContent = "Скрыть перевод";
+            }
+        });
+    </script>
+
+</body>
+</html>
