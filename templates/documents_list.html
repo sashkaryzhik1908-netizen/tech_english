@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Документация{% endblock title %}
+
+{% block content %}
+    <h1>Документация</h1>
+
+    {% for doc in documents %}
+        <p>
+            <a href="{{ url_for('documentation', id=doc.id) }}">
+                {{ doc.title }}
+            </a>
+        </p>
+    {% else %}
+        <p>Документы пока не добавлены.</p>
+    {% endfor %}
+{% endblock content %}

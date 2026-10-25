@@ -3,6 +3,80 @@
 {% block title %}Документация{% endblock title %}
 
 {% block content %}
-    <h1>Документация</h1>
-    <p>здесь будет документация</p>
+    {% if document %}
+        <h2>{{ document.title }}</h2>
+
+        <div id="document-text">
+            {% for part in parts %}
+                {% if part and part.isascii() and part.isalpha() %}
+                    <span class="word" data-word="{{ part }}">{{ part }}</span>
+                {% else %}
+                    {{ part }}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div id="translation-result" hidden></div>
+
+
+        <script>
+      
+const result = document.getElementById("translation-result");
+
+document.querySelectorAll(".word").forEach((element) => {
+    element.addEventListener("click", async (event) => {
+        const word = element.dataset.word;
+
+        const rect = element.getBoundingClientRect();
+
+        result.style.left = `${rect.left}px`;
+        result.style.top = `${rect.bottom + 5}px`;
+        result.style.display = "block";
+        result.textContent = "Загрузка...";
+
+        try {
+            const response = await fetch(
+                `/translate?word=${encodeURIComponent(word)}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || !data.translation) {
+                result.textContent = "Перевод не найден";
+                return;
+            }
+
+            result.textContent =
+                `${data.word} — ${data.translation}` +
+                (data.transcription ? ` ${data.transcription}` : "");
+
+        } catch (error) {
+            result.textContent = "Ошибка соединения с сервером";
+            console.error(error);
+        }
+    });
+});
+
+// Закрываем подсказку кликом вне слова и подсказки
+document.addEventListener("click", (event) => {
+    if (
+        !event.target.closest(".word") &&
+        !event.target.closest("#translation-result")
+    ) {
+        result.style.display = "none";
+    }
+});
+
+        </script>
+    {% else %}
+        <p>Документы пока не добавлены.</p>
+    {% endif %}
+
+    <div>
+        <p>Ссылка на оригинал:
+        <a href="{{ document.source }}" target="_blank" rel="noopener noreferrer">
+        хуяк
+    </a>
+    </p>
+    </div>
 {% endblock content %}

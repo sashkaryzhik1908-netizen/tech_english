@@ -4,6 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %}</title>
+    <style>
+    
+.word {
+    cursor: pointer;
+}
+
+.word:hover {
+    background-color: #e8e8e8;
+}
+
+#translation-result {
+    position: fixed;
+    display: none;
+    padding: 10px;
+    background: white;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 300px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+</style>
 </head>
 <body>
     {% include 'header.html' %}
